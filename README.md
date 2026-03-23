@@ -4,6 +4,11 @@ Solar-optimised EV charging manager. Acts as an OCPP 1.6 Central System (server)
 
 **No inverter connection required** — solar production is estimated from irradiance data (Open-Meteo) and your array parameters (kWp, tilt, azimuth).
 
+<img width="1330" height="1426" alt="Bildschirmfoto 2026-03-23 um 16 48 35" src="https://github.com/user-attachments/assets/dff365f1-7251-40e1-b633-fa754bf9ce31" />
+<img width="1330" height="1426" alt="Bildschirmfoto 2026-03-23 um 16 48 42" src="https://github.com/user-attachments/assets/02614ca2-cbfb-48c4-a847-5a56e4a41564" />
+<img width="1330" height="1426" alt="Bildschirmfoto 2026-03-23 um 16 48 46" src="https://github.com/user-attachments/assets/01623ab4-134c-4a05-b1c6-f26b294e4a0d" />
+
+
 ---
 
 ## How it works
