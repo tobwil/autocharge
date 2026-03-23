@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(.venv/bin/pip install:*)",
+      "Bash(curl -s http://localhost:8000/api/state)",
+      "Bash(python3 -m json.tool)",
+      "Bash(curl -s \"http://localhost:8000/api/test/goe?host=192.168.1.200\")",
+      "Bash(.venv/bin/python -c \"import pymodbus; print\\(pymodbus.__version__\\)\")",
+      "Bash(.venv/bin/python -c \":*)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:github.com)"
+    ]
+  }
+}

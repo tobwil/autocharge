@@ -1,0 +1,30 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    restart: unless-stopped
+    volumes:
+      - autocharge_data:/data
+    # host network required: OCPP WebSocket server (port 9000) must be
+    # reachable directly from the local network so the wallbox can connect
+    network_mode: host
+    environment:
+      - CONFIG_PATH=/data/config.json
+      - DB_PATH=/data/autocharge.db
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    # allows nginx to resolve host.docker.internal → Docker host IP
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      - backend
+
+volumes:
+  autocharge_data:
