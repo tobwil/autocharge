@@ -228,13 +228,19 @@ async def lifespan(app: FastAPI):
     log.info("AutoCharge starting up")
     _config = load_config()
     await init_db()
-    asyncio.create_task(run_ocpp_server(_config.ocpp_port))
-    asyncio.create_task(_weather_loop())
-    asyncio.create_task(_charging_loop())
-    asyncio.create_task(_push_loop())
-    asyncio.create_task(_history_loop())
+    # Keep strong references so the GC doesn't destroy pending tasks.
+    _tasks = [
+        asyncio.create_task(run_ocpp_server(_config.ocpp_port)),
+        asyncio.create_task(_weather_loop()),
+        asyncio.create_task(_charging_loop()),
+        asyncio.create_task(_push_loop()),
+        asyncio.create_task(_history_loop()),
+    ]
     yield
     log.info("AutoCharge shutting down")
+    for t in _tasks:
+        t.cancel()
+    await asyncio.gather(*_tasks, return_exceptions=True)
 
 
 app = FastAPI(title="AutoCharge", version="2.0.0", lifespan=lifespan)
@@ -306,7 +312,7 @@ async def charger_start(cp_id: str):
     if not cp:
         return JSONResponse({"error": "not found"}, status_code=404)
     # Set charge limit before starting (use current solar or fixed config)
-    target_amps, _ = compute_target(_solar_w, _config.charging, False)
+    target_amps, _, _ = compute_target(_solar_w, _config.charging, False)
     if target_amps < _config.charging.min_amps:
         target_amps = _config.charging.min_amps
     await cp.set_charge_limit(float(target_amps))
